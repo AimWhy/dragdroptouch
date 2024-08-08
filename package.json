@@ -1,10 +1,22 @@
 {
-  "name": "dragdroptouch",
-  "version": "1.0.0",
-  "description": "Polyfill that enables HTML5 drag drop support on mobile (touch) devices",
-  "main": "DragDropTouch.js",
+  "name": "drag-drop-touch",
+  "version": "2.0.0",
+  "description": "A polyfill that enables HTML5 drag-and-drop support for touch devices",
+  "type": "module",
+  "main": "dist/drag-drop-touch.esm.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:base": "esbuild --bundle --format=esm ./ts/drag-drop-touch.ts",
+    "build:esm:debug": "npm run build:base -- --outfile=dist/drag-drop-touch.debug.esm.js",
+    "build:esm": "npm run build:base -- --drop-labels=DEBUG --outfile=dist/drag-drop-touch.esm.js",
+    "build:min": "npm run build:base -- --drop-labels=DEBUG --minify --outfile=dist/drag-drop-touch.esm.min.js",
+    "build": "npm run lint && npm run format && npm run build:esm:debug && npm run build:esm && npm run build:min",
+    "dev:setup": "playwright install",
+    "format": "prettier -w ts/*.ts",
+    "lint": "tsc --noEmit --target esnext --module esnext ts/drag-drop-touch.ts",
+    "server": "node server.js",
+    "start": "npm run build && npm run server",
+    "test:integration": "playwright test tests --workers=1 --timeout 5000 --global-timeout 15000",
+    "test": "npm run start -- -- --test  && rm -rf test-results"
   },
   "repository": {
     "type": "git",
@@ -19,11 +31,20 @@
   ],
   "author": "Bernardo Castilho (https://github.com/Bernardo-Castilho)",
   "contributors": [
-    "Andreas Rozek <a.rozek@gmx.de> (https://www.rozek.de/)"
+    "Andreas Rozek <a.rozek@gmx.de> (https://www.rozek.de/)",
+    "Pomax <pomax@nihongoresources.com> (https://pomax.github.io)"
   ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Bernardo-Castilho/dragdroptouch/issues"
   },
-  "homepage": "https://github.com/Bernardo-Castilho/dragdroptouch#readme"
+  "homepage": "https://github.com/Bernardo-Castilho/dragdroptouch#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.45.2",
+    "esbuild": "^0.23.0",
+    "express": "^4.19.2",
+    "playwright": "^1.45.2",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4"
+  }
 }
